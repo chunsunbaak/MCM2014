@@ -1,20 +1,33 @@
-
 public class Car {
-	int velocity;
-	
-	Car(int velo){
-		velocity = velo;	
+	int myVelocity;
+	int lane;
+	int position;
+	int futureLane;
+	int futurePosition;
+	public Car(int velocity){
+		myVelocity = velocity;
+		lane = 0;
+		position = 0;
 	}
 
-	/**
-	 * @param args
-	 */
 	public String toString(){
-		return Integer.toString(velocity);
+		return Integer.toString(myVelocity);
 	}
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+	public void regularMove(){
+		futurePosition = position + myVelocity;
+	}
+	public void switchLeft(){
+		lane++;
+		regularMove();
 	}
 
+	public void deaccelerate(int newV) {
+		futurePosition = position + newV;
+		
+	}
+
+	public void deaccelerateLeft(int newV) {
+		futurePosition = position + newV;
+		lane++;
+	}
 }

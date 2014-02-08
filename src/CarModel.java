@@ -1,39 +1,59 @@
 import java.util.*;
 
 public class CarModel {
+	//public static final int LANE_LENGTH = 10;
+	
+	ArrayList<ArrayList<Car>> lanes;
 	
 	ArrayList<Car> myLeft = new ArrayList<Car>();
 	ArrayList<Car> myRight = new ArrayList<Car>();
 	ArrayList<Car> resultsLeft = new ArrayList<Car>(); // results stored in this arraylist
 	ArrayList<Car> resultsRight= new ArrayList<Car>(); // results stored in this arraylist
 	
-	int slow=4; int fast=5;
+	int slowV = 4;
+	int fastV = 5;
 	
-	public void makeLane(int l){
-		myLeft= new ArrayList<Car>();
-		myRight= new ArrayList<Car>();
-		for(int i=0;i<l;i++){
-			myLeft.add(i,new Car(0));
-			myRight.add(i,new Car(0));
-		}
-		return;
+	public CarModel(int laneLength){
+		lanes = new ArrayList<ArrayList<Car>>();
+		for(int i = 0; i < laneLength; i++)
+			lanes.add(new ArrayList<Car>());
 	}
+	public void insertCar(Car car){
+		lanes.get(0).add(car);
+	}
+	public static void main(String[] args) {
+		CarModel a = new CarModel();
+		a.makeLane(100);
+		a.insertCars(100);
+		System.out.println(a.myLeft);
+		System.out.println(a.myRight);
+		a.move();
+	}
+//	
+//	public void insertCars(int n){
+//		Random generator = new Random();
+//		for(int i = 0; i < n; i++){					// for each car...
+//			int ind = Math.abs(generator.nextInt() % n); // which index?
+//			int left = generator.nextInt() % 2; // left lane or right lane? 
+//			int velo = generator.nextInt() % 2; // slow or fast?
+//			if(left == 0){
+//				myLeft.add(ind, new Car(slowV*velo+fastV*(Math.abs(velo-1))));
+//			}
+//			else{
+//				myRight.add(ind, new Car(slowV*velo+fastV*(Math.abs(velo-1))));
+//			}
+//		}
+//	}
+//	
+//	public void makeLane(int len){
+//		myLeft= new ArrayList<Car>();
+//		myRight= new ArrayList<Car>();
+//		for(int i = 0; i < len; i++){
+//			myLeft.add(i, new Car(0));
+//			myRight.add(i, new Car(0));
+//		}
+//	}
 
-	public void putCars(int n){
-		Random generator = new Random();
-		for(int i=0;i<n;i++){					// for each car...
-			int ind = Math.abs(generator.nextInt() % n); // which index?
-			int left = generator.nextInt() % 2; // left lane or right lane? 
-			int velo = generator.nextInt() % 2; // slow or fast?
-			if( left == 0){
-				myLeft.add(ind, new Car(slow*velo+fast*(Math.abs(velo-1))));
-			}
-			else{
-				myRight.add(ind, new Car(slow*velo+fast*(Math.abs(velo-1))));
-			}
-		}
-	}
-	
 	public void move(){
 		for(int i=0; i<myLeft.size(); i++){
 				determine(i,true);
@@ -115,13 +135,6 @@ public class CarModel {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		CarModel a = new CarModel();
-		a.makeLane(100);
-		a.putCars(100);
-		System.out.println(a.myLeft);
-		System.out.println(a.myRight);
-		a.move();
-	}
+	
 
 }
