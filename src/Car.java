@@ -1,4 +1,4 @@
-public class Car {
+public class Car implements Comparable<Car>{
 	int myVelocity;
 	int lane;
 	int position;
@@ -11,23 +11,32 @@ public class Car {
 	}
 
 	public String toString(){
-		return Integer.toString(myVelocity);
+		//return "(" + lane + ", " + myVelocity + ")";
+		return myVelocity+"";
 	}
 	public void regularMove(){
 		futurePosition = position + myVelocity;
 	}
 	public void switchLeft(){
-		lane++;
+		futureLane++;
+		regularMove();
+	}
+	public void switchRight(){
+		futureLane--;
 		regularMove();
 	}
 
 	public void deaccelerate(int newV) {
-		futurePosition = position + newV;
+		futurePosition = position + myVelocity + newV;
 		
 	}
 
 	public void deaccelerateLeft(int newV) {
-		futurePosition = position + newV;
-		lane++;
+		futurePosition = position + myVelocity + newV;
+		futureLane++;
+	}
+	
+	public int compareTo(Car other){
+		return -(this.position - other.position);
 	}
 }
