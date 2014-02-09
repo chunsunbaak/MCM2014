@@ -19,10 +19,15 @@ public class StimulateBasic {
 	public static void doFrame(){
 		Scanner s = new Scanner(System.in);
 		int counter = 0;
+		insertCar(0, 10, 3);
+		insertCar(0, 9, 4);
+		insertCar(0, 8, 5);
+		insertCar(0, 6, 5);
 		while(true){
-			if((cars.size() <= NUM_CARS) && counter % 1 == 0) insertCar();
+			//if((cars.size() <= NUM_CARS) && counter % 1 == 0) insertCar();
 			moveCars();
-			System.out.print(printCars());
+			printCars();
+//			System.out.print(printCars());
 			s.nextLine();
 			counter++;
 		}
@@ -30,6 +35,13 @@ public class StimulateBasic {
 //			System.out.print(i+1+""+printCars());
 //			moveCars();
 //		}
+	}
+	public static void insertCar(int lane, int pos, int speed){
+		Car newCar = new Car(speed);
+		newCar.position = pos;
+		newCar.lane = lane;
+		cars.add(newCar);
+		model.insertCar(newCar);
 	}
 	public static void insertCar(){
 		Random rand = new Random();
@@ -46,6 +58,12 @@ public class StimulateBasic {
 						currentCar.regularMove();
 					}else{
 						Car carAhead = model.lanes.get(i).get(j - 1);
+						for(int k = 0; k < j; k++){
+							carAhead = model.lanes.get(i).get(j - k - 1);
+							if(carAhead.futureLane == carAhead.lane)
+								break;
+						}
+						
 						int gap = carAhead.position - currentCar.position - 1;
 						int futureDistance = gap + carAhead.myVelocity - currentCar.myVelocity;
 						if (futureDistance >= SAFE_DISTANCE){  //ample space
@@ -174,7 +192,7 @@ public class StimulateBasic {
 		}
 	}
 	
-	public static String printCars(){
+	public static void printCarsGraphical(){
 		int maxPosition = 0; 
 		for (Car car : cars){
 			maxPosition = Math.max(maxPosition , car.position);
@@ -202,9 +220,16 @@ public class StimulateBasic {
 			}
 			System.out.print(thisLane+"\n");
 		}
-		return lane;
+		System.out.println(lane);
 	}
-	
+	public static void printCars(){
+		for(ArrayList<Car> i: model.lanes){
+			for(Car j: i){
+				System.out.print(j);
+			}
+			System.out.println();
+		}
+	}
 	
 	
 }

@@ -4,15 +4,19 @@ public class Car implements Comparable<Car>{
 	int position;
 	int futureLane;
 	int futurePosition;
+	static int counter = 0;
+	int id;
 	public Car(int velocity){
 		myVelocity = velocity;
 		lane = 0;
 		position = 0;
+		id = counter;
+		counter++;
 	}
 
 	public String toString(){
-		//return "(" + lane + ", " + myVelocity + ")";
-		return myVelocity+"";
+		return "(" + lane + ", " + position + ", " + myVelocity + ")";
+		//return myVelocity+"";
 	}
 	public void regularMove(){
 		futurePosition = (position + myVelocity) % 1000;
@@ -50,6 +54,8 @@ public class Car implements Comparable<Car>{
 	}
 	
 	public int compareTo(Car other){
+		if(other.position == this.position)
+			return other.lane - this.lane;
 		return other.position - this.position;
 	}
 }
