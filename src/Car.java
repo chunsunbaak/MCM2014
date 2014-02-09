@@ -15,7 +15,7 @@ public class Car implements Comparable<Car>{
 		return myVelocity+"";
 	}
 	public void regularMove(){
-		futurePosition = position + myVelocity;
+		futurePosition = (position + myVelocity) % 1000;
 	}
 	public void switchLeft(){
 		futureLane++;
@@ -25,18 +25,31 @@ public class Car implements Comparable<Car>{
 		futureLane--;
 		regularMove();
 	}
-
 	public void deaccelerate(int newV) {
-		futurePosition = position + myVelocity + newV;
+		futurePosition = (position + myVelocity + newV) % 1000;
 		
 	}
 
 	public void deaccelerateLeft(int newV) {
-		futurePosition = position + myVelocity + newV;
+		futurePosition = (position + myVelocity + newV) % 1000;
 		futureLane++;
 	}
 	
+	public void changeVelocity(int newV) {
+		myVelocity = newV;
+		regularMove();
+	}
+	
+	public void switchLeftAndChangeVelocity(int futureVelocity){
+		changeVelocity(futureVelocity);
+		lane++;
+	}
+	public void switchRightAndChangeVelocity(int futureVelocity){
+		changeVelocity(futureVelocity);
+		lane--;
+	}
+	
 	public int compareTo(Car other){
-		return -(this.position - other.position);
+		return other.position - this.position;
 	}
 }
