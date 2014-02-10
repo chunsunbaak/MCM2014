@@ -5,10 +5,10 @@ public class CarModel {
 	
 	ArrayList<ArrayList<Car>> lanes;
 	
-	ArrayList<Car> myLeft = new ArrayList<Car>();
-	ArrayList<Car> myRight = new ArrayList<Car>();
-	ArrayList<Car> resultsLeft = new ArrayList<Car>(); // results stored in this arraylist
-	ArrayList<Car> resultsRight= new ArrayList<Car>(); // results stored in this arraylist
+	//ArrayList<Car> myLeft = new ArrayList<Car>();
+//	ArrayList<Car> myRight = new ArrayList<Car>();
+//	ArrayList<Car> resultsLeft = new ArrayList<Car>(); // results stored in this arraylist
+//	ArrayList<Car> resultsRight= new ArrayList<Car>(); // results stored in this arraylist
 	
 	int slowV = 4;
 	int fastV = 5;
