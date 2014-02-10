@@ -4,7 +4,7 @@ public class Car implements Comparable<Car>{
 	int position;
 	int futureLane;
 	int futurePosition;
-	static int MAX_LENGTH = 100;
+	static int MAX_LENGTH = 500;
 	static int counter = 0;
 	int id;
 	public Car(int velocity){
@@ -47,8 +47,15 @@ public class Car implements Comparable<Car>{
 //		futurePosition = (position + myVelocity + newV) % 1000;
 		int gap = front.position - cur.position - 1;
 		futurePosition = (position + gap / 2) % MAX_LENGTH;
-		futureLane++;
-		System.out.println("= = DEACCELERATE LEFT = =");
+		futureLane = 1;
+		//System.out.println("= = DEACCELERATE LEFT = =");
+	}
+	public void deaccelerateToSafeSpeedRight(Car cur, Car front) {
+//		futurePosition = (position + myVelocity + newV) % 1000;
+		int gap = front.position - cur.position - 1;
+		futurePosition = (position + gap / 2) % MAX_LENGTH;
+		futureLane = 0;
+		//System.out.println("= = DEACCELERATE LEFT = =");
 	}
 	public void deaccelerateLeft(int newV) {
 		futurePosition = (position + myVelocity + newV) % MAX_LENGTH;

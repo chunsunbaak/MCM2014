@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Simulate {
+public class Simulate009 {
 	// 001 Basic Model <WOW THIS LOOKS VERY GOOD> <WOW THIS LOOKS VERY GOOD> <WOW THIS LOOKS VERY GOOD> <WOW THIS LOOKS VERY GOOD> <WOW THIS LOOKS VERY GOOD>
 	// 002 Add Safe Distance
 	// 003 Add Loop (applies to previous versions) No change in Simulate
@@ -18,11 +18,11 @@ public class Simulate {
 	// 009 fixed bugs
 	static ArrayList<ArrayList<AggressiveCar>> lanes;
 	public static final int LANE_LENGTH = 2;
-	//public static final int SLOW_VELOCITY = 5;
-	//public static final int FAST_VELOCITY = 8;
-	//public static final double RATIO = 1;  //slow to fast	
+	public static final int SLOW_VELOCITY = 5;
+	public static final int FAST_VELOCITY = 8;
+	public static final double RATIO = 0.5;  //slow to fast	
 	public static double density;
-	public static final int SPEED_LIMIT = 6;
+	
 	static Scanner s = new Scanner(System.in);
 	public static ArrayList<AggressiveCar> cars;
 	static Random rand;
@@ -42,8 +42,8 @@ public class Simulate {
 	}
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
 		rand = new Random(2014);
-		writer = new PrintWriter("time-space-right.csv", "UTF-8");
-		density = 0.2;
+		writer = new PrintWriter("1-time-space-right.csv", "UTF-8");
+		density = 0.1;
 		cars = new ArrayList<AggressiveCar>();
 		lanes = new ArrayList<ArrayList<AggressiveCar>>();
 		for(int i = 0; i < LANE_LENGTH; i++)
@@ -84,7 +84,7 @@ public class Simulate {
 			//////System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 			if(counter > 100){
 				for(AggressiveCar i: cars)
-					if(i.lane == 1)
+					if(i.lane == 0)
 						writer.println(counter + "," + i.position);
 				////printCars();
 				////s.nextLine();
@@ -138,7 +138,12 @@ public class Simulate {
 		//////System.out.println("Finished Inserting: " + newCar);
 	}
 	public static void insertAggressiveCar(int lane, int pos){
-		int speed = SPEED_LIMIT;
+		int speed;
+		if(rand.nextDouble() < RATIO / (RATIO + 1)){
+			speed = SLOW_VELOCITY;
+		}else{
+			speed = FAST_VELOCITY;
+		}
 		double aggression = genAggression();
 		AggressiveCar newCar = new AggressiveCar(speed, aggression);
 		newCar.position = pos;
@@ -150,7 +155,12 @@ public class Simulate {
 		//////System.out.println("Finished Inserting: " + newCar);
 	}
 	public static void insertAggressiveCar(){
-		int speed = SPEED_LIMIT;
+		int speed;
+		if(rand.nextDouble() < RATIO / (RATIO + 1)){
+			speed = SLOW_VELOCITY;
+		}else{
+			speed = FAST_VELOCITY;
+		}
 		double aggression = genAggression();
 		AggressiveCar newCar = new AggressiveCar(speed, aggression);
 		newCar.position = 0;
@@ -162,7 +172,7 @@ public class Simulate {
 	}
 	public static void insertCar(){
 
-		AggressiveCar newCar = new AggressiveCar(SPEED_LIMIT, 0.5);
+		AggressiveCar newCar = new AggressiveCar(SLOW_VELOCITY + rand.nextInt(2) * (FAST_VELOCITY - SLOW_VELOCITY), 0.5);
 		cars.add(newCar);
 		insertCar(newCar);
 		//////System.out.println(newCar);

@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Simulate {
+public class SimulateSafety {
 	// 001 Basic Model <WOW THIS LOOKS VERY GOOD> <WOW THIS LOOKS VERY GOOD> <WOW THIS LOOKS VERY GOOD> <WOW THIS LOOKS VERY GOOD> <WOW THIS LOOKS VERY GOOD>
 	// 002 Add Safe Distance
 	// 003 Add Loop (applies to previous versions) No change in Simulate
@@ -18,11 +18,13 @@ public class Simulate {
 	// 009 fixed bugs
 	static ArrayList<ArrayList<AggressiveCar>> lanes;
 	public static final int LANE_LENGTH = 2;
-	//public static final int SLOW_VELOCITY = 5;
-	//public static final int FAST_VELOCITY = 8;
-	//public static final double RATIO = 1;  //slow to fast	
-	public static double density;
+//	public static final int SLOW_VELOCITY = 5;
+//	public static final int FAST_VELOCITY = 8;
+//	public static final double RATIO = 2;  //slow to fast
+
 	public static final int SPEED_LIMIT = 6;
+	public static double density;
+	
 	static Scanner s = new Scanner(System.in);
 	public static ArrayList<AggressiveCar> cars;
 	static Random rand;
@@ -42,13 +44,15 @@ public class Simulate {
 	}
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
 		rand = new Random(2014);
-		writer = new PrintWriter("time-space-right.csv", "UTF-8");
-		density = 0.2;
-		cars = new ArrayList<AggressiveCar>();
-		lanes = new ArrayList<ArrayList<AggressiveCar>>();
-		for(int i = 0; i < LANE_LENGTH; i++)
-			lanes.add(new ArrayList<AggressiveCar>());
-		doFrame();
+		writer = new PrintWriter("7-v-d-sl-6.csv", "UTF-8");
+		for(int i = 1; i < 50; i++){
+			density = i / 50.0;
+			cars = new ArrayList<AggressiveCar>();
+			lanes = new ArrayList<ArrayList<AggressiveCar>>();
+			for(int j = 0; j < LANE_LENGTH; j++)
+				lanes.add(new ArrayList<AggressiveCar>());
+			doFrame();
+		}
 		writer.close();
 	}
 	public static double genAggression(){
@@ -62,10 +66,11 @@ public class Simulate {
 	}
 	public static boolean safe(AggressiveCar cur, AggressiveCar front, double aggression){
 		int distance = (front.position + Car.MAX_LENGTH - cur.position - 1) % Car.MAX_LENGTH;
-		return distance >= (2.5 - aggression) * cur.getVelocity() + 2;
+		return distance >= (2.5 - aggression) * cur.getVelocity();
 	}
+	static int counter;
 	public static void doFrame(){
-		int counter = 0;
+		counter = 0;
 		vsTotal = 0;
 		vsCounter = 0;
 		vNorm = 0;
@@ -75,23 +80,22 @@ public class Simulate {
 			insertAggressiveCar(pos[0], pos[1]);
 		}
 		System.out.println(cars.size());
-		while(counter < 600){
+		while(counter < 300){
 			counter++;
 			//////System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 			moveCars();
 			////printCars();
 			////s.nextLine();
 			//////System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-			if(counter > 100){
-				for(AggressiveCar i: cars)
-					if(i.lane == 1)
-						writer.println(counter + "," + i.position);
+			if(counter > 50){
+				vsTotal += calculateVS();
+				vsCounter++;
+				vNorm += calculateV();
 				////printCars();
 				////s.nextLine();
 			}
 			//////System.out.println(counter);
-		}
-		
+		} 
 		//////System.out.println("WRITTEN");
 	}
 	static double vsTotal;
@@ -176,6 +180,19 @@ public class Simulate {
 		for(AggressiveCar i: cars){
 			////printCars();
 			moveCar(i, lanes.get(i.lane).indexOf(i));
+			//System.out.println(i.lastVelocity);
+			if(counter > 50){
+				ArrayList<AggressiveCar> myLane = lanes.get(i.lane);
+				if(i.lastVelocity > 0){
+					writer.println(density + "," + ((myLane.get((myLane.indexOf(i) + 1) % myLane.size()).position
+							- i.position) / i.lastVelocity));
+				}else if(i.lastVelocity == 0){
+					writer.println(density + ",0");
+				}else{
+					System.out.println("dafuq");
+				}
+				
+			}
 		}
 	}
 	static void moveCar(AggressiveCar currentCar, int j){
@@ -194,15 +211,16 @@ public class Simulate {
 				}else{  						//not enough space, try to pass
 					AggressiveCar carAheadLeftLane = null;
 					AggressiveCar carBehindLeftLane = null;
-					for(AggressiveCar c: lanes.get(currentCar.lane + 1)){
-						if(c.position >= currentCar.position){
-							carAheadLeftLane = c;
+					int tempIndex = -1;
+					for(int i = 0; i < lanes.get(1).size(); i++){
+						if(lanes.get(1).get(i).position >= currentCar.position){
+							tempIndex = i;
 						}
 					}
-					for(AggressiveCar c: lanes.get(currentCar.lane + 1)){
-						if(c.position < currentCar.position){
-							carBehindLeftLane = c;
-							break;
+					if(tempIndex != -1){
+						carAheadLeftLane = lanes.get(1).get(tempIndex);
+						if(tempIndex + 1 < lanes.get(1).size()){
+							carBehindLeftLane = lanes.get(1).get(tempIndex + 1);
 						}
 					}
 					//get cars infront and behind
